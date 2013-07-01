@@ -8,3 +8,7 @@ class LoginForm(Form):
 class ProfileForm(Form):
     name = TextField('Name', validators=[Required()])
     email = TextField('Email Address', [validators.Length(min=6)])
+    is_public = BooleanField('Public', default=False)
+
+class KeyNewForm(Form):
+    name = TextField('Name', validators=[Required()])

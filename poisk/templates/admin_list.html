@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% macro change_is_keyholder(user) -%}
+    <form style="display: inline" action="{{ url_for("change_is_keyholder", user_id=user.id) }}" method="POST">
+        <input type="hidden" name="keyholder" value="{{ not user.is_keyholder }}">
+        <input type="submit" value="{% if user.is_keyholder %}revoke{% else %}grant{%endif%}">
+    </form>
+{%- endmacro %}
+
+{% macro change_is_admin(user) -%}
+    <form style="display: inline" action="{{ url_for("change_is_admin", user_id=user.id) }}" method="POST">
+        <input type="hidden" name="admin" value="{{ not user.is_admin }}">
+        <input type="submit" value="{% if user.is_admin %}revoke{% else %}grant{%endif%}">
+    </form>
+{%- endmacro %}
+
+{% macro change_keyholder(key, keyholders) -%}
+    <form style="display: inline" action="{{ url_for("change_keyholder", key_id=key.id) }}" method="POST">
+        <select name="keyholder_id">
+            {% for keyholder in keyholders %}
+            <option value="{{keyholder.id}}" {% if key.holder_id == keyholder.id %}selected{% endif %}>{{keyholder.nick}} - {{keyholder.name}}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="change">
+    </form>
+{%- endmacro %}
+
+{% block title %}User list{% endblock %}
+{% block body %}
+<h2>Key list</h2>
+    <ul>
+    {% for key in keys %}
+    <li>{{ key.name }} - Keyholder: {{ key.holder.nick }} 
+    - {{ change_keyholder(key, keyholders) }}
+    </li>
+    {% endfor %}
+    </ul>
+
+<h2>User list</h2>
+    <ul>
+    {% for user in users %}
+    <li>{{ user.nick }} - {{ user.name }} 
+    - Keyholder: {{ user.is_keyholder }} {{ change_is_keyholder(user) }}
+    - Admin: {{ user.is_admin }} {{ change_is_admin(user) }}
+    </li>
+    {% endfor %}
+    </ul>
+{% endblock %}

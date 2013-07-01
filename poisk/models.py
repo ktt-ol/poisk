@@ -15,10 +15,12 @@ keys_users = db.Table('keys_users',
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    nick = db.Column(db.String, nullable=False)
+    nick = db.Column(db.String, nullable=False, unique=True)
     name = db.Column(db.String)
+    email = db.Column(db.String)
     is_keyholder = db.Column(db.Boolean)
     is_admin = db.Column(db.Boolean)
+    is_public = db.Column(db.Boolean)
 
     def is_authenticated(self):
         return True
@@ -44,7 +46,7 @@ class Key(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(), unique=True)
     holder_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    holder = db.relationship('User', backref='keys')
+    holder = db.relationship('User', backref='keys', lazy='joined')
 
     def __init__(self, name):
         self.name = name
