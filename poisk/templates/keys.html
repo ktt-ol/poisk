@@ -13,22 +13,36 @@
             <option value="{{keyholder.id}}" {% if key.holder_id == keyholder.id %}selected{% endif %}>{{keyholder.nick}} - {{keyholder.name}}</option>
             {% endfor %}
         </select>
-        <input type="submit" value="change">
+        <input type="submit" value="give">
     </form>
 {%- endmacro %}
 
 {% block title %}Key list{% endblock %}
 {% block body %}
 <h2>Key list</h2>
-    <ul>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Key</th>
+        <th>Keyholder</th>
+        <th>Take</th>
+        <th>Give</th>
+    </tr>
+    </thead>
+    <tbody>
     {% for key in keys %}
-    <li>{{ key.name }} - Keyholder: {{ key.holder.nick }}
+    <tr>
+        <td>{{ key.name }}</td>
+        <td>{{ key.holder.nick }}</td>
+        <td>
     {% if g.user != key.holder %}
     {{ take_key(key) }}
     {% endif %}
-    - {{ give_key(key, keyholders) }}
-    </li>
+        </td>
+        <td>{{ give_key(key, keyholders) }}</td>
+    </tr>
     {% endfor %}
-    </ul>
+    </tbody>
+</table>
 
 {% endblock %}

@@ -37,12 +37,24 @@
     </ul>
 
 <h2>User list</h2>
-    <ul>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Nick</th>
+        <th>Name</th>
+        <th>Keyholder</th>
+        <th>Admin</th>
+    </tr>
+    </thead>
+    <tbody>
     {% for user in users %}
-    <li>{{ user.nick }} - {{ user.name }} 
-    - Keyholder: {{ user.is_keyholder }} {{ change_is_keyholder(user) }}
-    - Admin: {{ user.is_admin }} {{ change_is_admin(user) }}
-    </li>
+    <tr>
+        <td>{{ user.nick }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.is_keyholder }} {{ change_is_keyholder(user) }}</td>
+        <td>{{ user.is_admin }} {{ change_is_admin(user) }}</td>
+    </tr>
     {% endfor %}
-    </ul>
+    </tbody>
+</table>
 {% endblock %}

@@ -18,8 +18,8 @@ class User(db.Model):
     nick = db.Column(db.String, nullable=False, unique=True)
     name = db.Column(db.String)
     email = db.Column(db.String)
-    is_keyholder = db.Column(db.Boolean)
-    is_admin = db.Column(db.Boolean)
+    is_keyholder = db.Column(db.Boolean, default=False)
+    is_admin = db.Column(db.Boolean, default=False)
     is_public = db.Column(db.Boolean)
 
     def is_authenticated(self):
