@@ -41,7 +41,22 @@
         </div>
       </div>
   </div>
-
+    <div class="container-fluid">
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{% if category == 'message' %}info{% else %}{{category}}{% endif %}">{{ message }} </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    {% if form and form.errors %}
+        {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+            {% for error in field_errors %}
+                <div class="alert alert-error">{{ form[field_name].label.text }}: {{ error }}</div>
+            {% endfor %}
+        {% endfor %}
+    {% endif %}
+    </div>
     <div class="container-fluid">
       <div class="row-fluid">
         {% block body %}

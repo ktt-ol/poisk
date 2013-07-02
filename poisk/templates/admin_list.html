@@ -1,40 +1,59 @@
 {% extends "layout.html" %}
 
 {% macro change_is_keyholder(user) -%}
-    <form style="display: inline" action="{{ url_for("change_is_keyholder", user_id=user.id) }}" method="POST">
+    <form class="form-inline" action="{{ url_for("change_is_keyholder", user_id=user.id) }}" method="POST">
         <input type="hidden" name="keyholder" value="{{ not user.is_keyholder }}">
-        <input type="submit" value="{% if user.is_keyholder %}revoke{% else %}grant{%endif%}">
+        {% if user.is_keyholder %}
+        <input class="btn btn-success" type="submit" value="Yes">
+        {% else %}
+        <input class="btn" type="submit" value="No">
+        {% endif %}
     </form>
 {%- endmacro %}
 
 {% macro change_is_admin(user) -%}
-    <form style="display: inline" action="{{ url_for("change_is_admin", user_id=user.id) }}" method="POST">
+    <form class="form-inline" action="{{ url_for("change_is_admin", user_id=user.id) }}" method="POST">
         <input type="hidden" name="admin" value="{{ not user.is_admin }}">
-        <input type="submit" value="{% if user.is_admin %}revoke{% else %}grant{%endif%}">
+        {% if user.is_admin %}
+        <input class="btn btn-warning" type="submit" value="Yes">
+        {% else %}
+        <input class="btn" type="submit" value="No">
+        {% endif %}
     </form>
 {%- endmacro %}
 
 {% macro change_keyholder(key, keyholders) -%}
-    <form style="display: inline" action="{{ url_for("change_keyholder", key_id=key.id) }}" method="POST">
+    <form class="form-inline" action="{{ url_for("change_keyholder", key_id=key.id) }}" method="POST">
         <select name="keyholder_id">
             {% for keyholder in keyholders %}
-            <option value="{{keyholder.id}}" {% if key.holder_id == keyholder.id %}selected{% endif %}>{{keyholder.nick}} - {{keyholder.name}}</option>
+            <option value="{{keyholder.id}}" {% if key.holder_id == keyholder.id %}selected{% endif %}>{{ keyholder }}</option>
             {% endfor %}
         </select>
-        <input type="submit" value="change">
+        <input class="btn" type="submit" value="change">
     </form>
 {%- endmacro %}
 
 {% block title %}User list{% endblock %}
 {% block body %}
 <h2>Key list</h2>
-    <ul>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Key</th>
+        <th>Keyholder</th>
+        <th>New keyholder</th>
+    </tr>
+    </thead>
+    <tbody>
     {% for key in keys %}
-    <li>{{ key.name }} - Keyholder: {{ key.holder.nick }} 
-    - {{ change_keyholder(key, keyholders) }}
-    </li>
+    <tr>
+        <td>{{ key.name }}</td>
+        <td>{{ key.holder.nick }}</td>
+        <td>{{ change_keyholder(key, keyholders) }}</td>
+    </tr>
     {% endfor %}
-    </ul>
+    </tbody>
+</table>
 
 <h2>User list</h2>
 <table class="table">
@@ -42,6 +61,7 @@
     <tr>
         <th>Nick</th>
         <th>Name</th>
+        <th>Email</th>
         <th>Keyholder</th>
         <th>Admin</th>
     </tr>
@@ -51,8 +71,9 @@
     <tr>
         <td>{{ user.nick }}</td>
         <td>{{ user.name }}</td>
-        <td>{{ user.is_keyholder }} {{ change_is_keyholder(user) }}</td>
-        <td>{{ user.is_admin }} {{ change_is_admin(user) }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ change_is_keyholder(user) }}</td>
+        <td>{{ change_is_admin(user) }}</td>
     </tr>
     {% endfor %}
     </tbody>

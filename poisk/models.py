@@ -40,6 +40,11 @@ class User(db.Model):
     def __repr__(self):
         return '<User %r>' % self.nick
 
+    def __str__(self):
+        if self.name:
+            return "%s (%s)" % (self.nick, self.name)
+        return self.nick
+
 
 class Key(db.Model):
     __tablename__ = 'keys'

@@ -101,7 +101,7 @@ def create_profile():
 
     form = ProfileForm()
     if form.validate_on_submit():
-        flash(u'Profile successfully created')
+        flash(u'Profile successfully created', 'success')
         user = User(session['openid'])
         user.email = form.email.data
         user.name = form.name.data
@@ -128,9 +128,9 @@ def edit_profile():
             db.session.delete(g.user)
             db.session.commit()
             logout_user()
-            flash(u'Profile deleted')
+            flash(u'Profile deleted', 'success')
             return redirect(url_for('index'))
-        flash(u'Profile successfully created')
+        flash(u'Profile successfully created', 'success')
         g.user.name = form.name.data
         g.user.email = form.email.data
         g.user.is_public = form.is_public.data
@@ -153,7 +153,7 @@ def change_is_keyholder(user_id):
     user = User.query.get(user_id)
     user.is_keyholder = is_keyholder
     db.session.commit()
-    flash("changed keyholder status for %s" % user.nick)
+    flash("changed keyholder status for %s" % user.nick, 'success')
     return redirect(url_for("admin"))
 
 @app.route('/user/<int:user_id>/change_admin', methods=['POST'])
@@ -165,7 +165,7 @@ def change_is_admin(user_id):
     user = User.query.get(user_id)
     user.is_admin = is_admin
     db.session.commit()
-    flash("changed admin status for %s" % user.nick)
+    flash("changed admin status for %s" % user.nick, 'success')
     return redirect(url_for("admin"))
 
 @app.route('/key/<int:key_id>/change_keyholder', methods=['POST'])
@@ -175,7 +175,7 @@ def change_keyholder(key_id):
     key = Key.query.get(key_id)
     key.holder = user
     db.session.commit()
-    print("changed keyholder for %s to %s" % (key.name, user.nick))
+    flash("changed keyholder for %s to %s" % (key.name, user.nick), 'success')
     return redirect(url_for("admin"))
 
 @app.route('/key/new', methods=['GET', 'POST'])
@@ -186,7 +186,7 @@ def key_new():
         key = Key(form.name.data)
         db.session.add(key)
         db.session.commit()
-        flash('Key added')
+        flash('Key added', 'success')
         return redirect(url_for("admin"))
     return render_template('key_add.html', form=form)
 

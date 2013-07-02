@@ -1,19 +1,19 @@
 {% extends "layout.html" %}
 
 {% macro take_key(key) -%}
-    <form style="display: inline" action="{{ url_for("key_take", key_id=key.id) }}" method="POST">
-        <input type="submit" value="take">
+    <form class="form-inline" action="{{ url_for("key_take", key_id=key.id) }}" method="POST">
+        <input class="btn" type="submit" value="take">
     </form>
 {%- endmacro %}
 
 {% macro give_key(key, keyholders) -%}
-    <form style="display: inline" action="{{ url_for("change_keyholder", key_id=key.id) }}" method="POST">
+    <form class="form-inline" action="{{ url_for("change_keyholder", key_id=key.id) }}" method="POST">
         <select name="keyholder_id">
             {% for keyholder in keyholders %}
-            <option value="{{keyholder.id}}" {% if key.holder_id == keyholder.id %}selected{% endif %}>{{keyholder.nick}} - {{keyholder.name}}</option>
+            <option value="{{keyholder.id}}" {% if key.holder_id == keyholder.id %}selected{% endif %}>{{ keyholder }}</option>
             {% endfor %}
         </select>
-        <input type="submit" value="give">
+        <input class="btn" type="submit" value="give">
     </form>
 {%- endmacro %}
 
@@ -33,7 +33,7 @@
     {% for key in keys %}
     <tr>
         <td>{{ key.name }}</td>
-        <td>{{ key.holder.nick }}</td>
+        <td>{{ key.holder }}</td>
         <td>
     {% if g.user != key.holder %}
     {{ take_key(key) }}
