@@ -190,6 +190,11 @@ def key_new():
         return redirect(url_for("admin"))
     return render_template('key_add.html', form=form)
 
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 @app.route('/logout')
 def logout():
     logout_user()

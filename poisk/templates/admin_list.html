@@ -36,6 +36,7 @@
 {% block title %}User list{% endblock %}
 {% block body %}
 <h2>Key list</h2>
+<div class="row-fluid">
 <table class="table">
     <thead>
     <tr>
@@ -54,6 +55,11 @@
     {% endfor %}
     </tbody>
 </table>
+</div>
+
+<div class="row-fluid">
+<p><a href="{{ url_for('key_new') }}">Add key</a></p>
+</div>
 
 <h2>User list</h2>
 <table class="table">

@@ -1,20 +1,28 @@
 {% extends "layout.html" %}
 {% block body %}
-<div class="span12">
-    <div class="hero-unit">
-    <h1>Poisk!</h1>
-    <p>Poisk stands for Search in russian. Docking module of the International Space Station.</p>
-    <p>Poisk search for keyholder. Docking module of the Mainframe, Hackspace Oldenburg</p>
-    </div>
-</div><!--/span-->
 <div class="row-fluid">
     <div class="span4">
         <h2>Keys</h2>
-        <ul>
-        {% for key in keys %}
-        <li>{{ key.name }}: {{ key.holder.nick }}</li>
-        {% endfor %}
-        </ul>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Key</th>
+        <th>Keyholder</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for key in keys %}
+    <tr>
+        <td>{{ key.name }}</td>
+        {% if g.user.is_authenticated() and g.user.is_keyholder %}
+        <td>{{ key.holder }}</td>
+        {% else %}
+        <td>{{ key.holder.nick }}</td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
     </div><!--/span-->
 </div><!--/span-->
 {% endblock %}

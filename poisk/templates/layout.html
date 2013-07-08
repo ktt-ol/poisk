@@ -2,18 +2,12 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-
-    <style type="text/css">
-      body {
-        padding-top: 60px;
-        padding-bottom: 40px;
-    }
-    </style>
     <link href="{{ url_for('static', filename='bootstrap/css/bootstrap-responsive.min.css') }}" rel="stylesheet">
 </head>
-<body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+<body >
+    <div class="navbar navbar-static-top">
       <div class="navbar-inner">
         <div class="container-fluid">
           <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -32,7 +26,10 @@
               {% endif %}
             </ul>
             <ul class="nav">
+              {% if g.user.is_authenticated() %}
               <li><a href="{{ url_for("keys") }}">Keys</a></li>
+              {% endif %}
+              <li><a href="{{ url_for("about") }}">About</a></li>
               {% if g.user.is_authenticated() and g.user.is_admin %}
               <li><a href="{{ url_for("admin") }}">Admin</a></li>
               {% endif %}
@@ -41,12 +38,12 @@
         </div>
       </div>
   </div>
-    <div class="container-fluid">
+  <div class="container">
     {% with messages = get_flashed_messages(with_categories=True) %}
     {% if messages %}
-    {% for category, message in messages %}
-    <div class="alert alert-{% if category == 'message' %}info{% else %}{{category}}{% endif %}">{{ message }} </div>
-    {% endfor %}
+            {% for category, message in messages %}
+                <div class="alert alert-{% if category == 'message' %}info{% else %}{{category}}{% endif %}">{{ message }} </div>
+            {% endfor %}
     {% endif %}
     {% endwith %}
     {% if form and form.errors %}
@@ -56,20 +53,18 @@
             {% endfor %}
         {% endfor %}
     {% endif %}
-    </div>
-    <div class="container-fluid">
-      <div class="row-fluid">
-        {% block body %}
-        {% endblock %}
-      </div><!--/row-->
 
-      <hr>
+    {% block body %}
+    {% endblock %}
+
+
 
       <footer>
+      <hr>
         <p>&copy; Company 2013</p>
       </footer>
 
-    </div><!--/.fluid-container-->
+    </div><!--/container-->
     
 </body>
 </html>

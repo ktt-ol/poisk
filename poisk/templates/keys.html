@@ -19,30 +19,35 @@
 
 {% block title %}Key list{% endblock %}
 {% block body %}
-<h2>Key list</h2>
-<table class="table">
-    <thead>
-    <tr>
-        <th>Key</th>
-        <th>Keyholder</th>
-        <th>Take</th>
-        <th>Give</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for key in keys %}
-    <tr>
-        <td>{{ key.name }}</td>
-        <td>{{ key.holder }}</td>
-        <td>
-    {% if g.user != key.holder %}
-    {{ take_key(key) }}
-    {% endif %}
-        </td>
-        <td>{{ give_key(key, keyholders) }}</td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
-
+<div class="row-fluid">
+    <h2>Key list</h2>
+</div>
+<div class="row-fluid">
+    <div class="span9">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Key</th>
+                <th>Keyholder</th>
+                <th>Take</th>
+                <th>Give</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for key in keys %}
+            <tr>
+                <td>{{ key.name }}</td>
+                <td>{{ key.holder }}</td>
+                <td>
+            {% if g.user != key.holder %}
+            {{ take_key(key) }}
+            {% endif %}
+                </td>
+                <td>{{ give_key(key, keyholders) }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}
