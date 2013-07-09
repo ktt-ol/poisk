@@ -7,7 +7,7 @@ from flask import (
 from flask.ext.login import current_user, login_user, login_required, logout_user
 
 from poisk import app, lm, oid
-from poisk.models import db, User, Key
+from poisk.models import db, User, Key, change_key_holder
 from poisk.forms import LoginForm, ProfileForm, KeyNewForm
 
 openid_url = 'https://id.kreativitaet-trifft-technik.de/openidserver/users/'
@@ -52,7 +52,7 @@ def keys():
 @oid.loginhandler
 def key_take(key_id):
     key = Key.query.get(key_id)
-    key.holder = g.user
+    change_key_holder(key, g.user)
     db.session.commit()
     return redirect(url_for('keys'))
 
@@ -173,7 +173,7 @@ def change_is_admin(user_id):
 def change_keyholder(key_id):
     user = User.query.get(request.form['keyholder_id'])
     key = Key.query.get(key_id)
-    key.holder = user
+    change_key_holder(key, user)
     db.session.commit()
     flash("changed keyholder for %s to %s" % (key.name, user.nick), 'success')
     return redirect(url_for("admin"))

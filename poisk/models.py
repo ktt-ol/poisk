@@ -1,16 +1,33 @@
+from flask import g
 from datetime import datetime
 from flask.ext.sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
 
-keys_users = db.Table('keys_users',
-    db.Column('key_id', db.Integer, db.ForeignKey('keys.id')),
-    db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
-    db.Column('start', db.DateTime, default=datetime.now),
-    db.Column('end', db.DateTime),
-)
+class KeyTransaction(db.Model):
+    __tablename__ = 'key_transactions'
 
+    id = db.Column(db.Integer, primary_key=True)
+    key_id = db.Column(db.Integer, db.ForeignKey('keys.id'))
+    key = db.relationship('Key', foreign_keys=[key_id])
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user = db.relationship('User', foreign_keys=[user_id])
+    holder_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    holder = db.relationship('User', foreign_keys=[holder_id])
+    start = db.Column(db.DateTime, default=datetime.now)
+    end = db.Column(db.DateTime)
+
+def change_key_holder(key, holder):
+    if key.current_transaction:
+        key.current_transaction.end = datetime.now()
+    tx = KeyTransaction()
+    tx.user = g.user
+    tx.key = key
+    tx.holder = holder
+    key.current_transaction = tx
+    key.holder = holder
+    db.session.add(tx)
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -52,6 +69,8 @@ class Key(db.Model):
     name = db.Column(db.String(), unique=True)
     holder_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     holder = db.relationship('User', backref='keys', lazy='joined')
+    current_transaction_id = db.Column(db.Integer, db.ForeignKey('key_transactions.id'))
+    current_transaction = db.relationship('KeyTransaction', foreign_keys=[current_transaction_id], post_update=True)
 
     def __init__(self, name):
         self.name = name
