@@ -84,4 +84,11 @@ class Key(db.Model):
     def __repr__(self):
         return '<Key %r>' % self.name
 
+class ActionToken(db.Model):
+    __tablename__ = 'action_tokens'
+    id = db.Column(db.Integer, primary_key=True)
+    hash = db.Column(db.String, unique=True, nullable=False)
+    created = db.Column(db.DateTime(), default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user = db.relationship('User')
 

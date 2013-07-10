@@ -1,3 +1,5 @@
+import uuid
+import datetime
 from functools import wraps
 from flask import (
     render_template, g, session, request, redirect, flash, url_for,
@@ -7,7 +9,7 @@ from flask import (
 from flask.ext.login import current_user, login_user, login_required, logout_user
 
 from poisk import app, lm, oid
-from poisk.models import db, User, AnonUser, Key, KeyTransaction, change_key_holder
+from poisk.models import db, User, AnonUser, Key, KeyTransaction, change_key_holder, ActionToken
 from poisk.forms import LoginForm, ProfileForm, KeyNewForm
 
 openid_url = 'https://id.kreativitaet-trifft-technik.de/openidserver/users/'
@@ -84,7 +86,6 @@ def login():
     return render_template('login.html', next=oid.get_next_url(),
         form=form, error=oid.fetch_error())
 
-
 @oid.after_login
 def create_or_login(resp):
     """This is called when login with OpenID succeeded and it's not
@@ -151,6 +152,33 @@ def edit_profile():
         db.session.commit()
         return redirect(url_for('edit_profile'))
     return render_template('edit_profile.html', form=form)
+
+@app.route('/token/create/<int:user_id>')
+def token_create(user_id):
+    if g.user.id != user_id and not g.user.is_admin:
+        return abort(403)
+
+    ActionToken.query.filter(ActionToken.user==g.user).delete()
+    token = ActionToken()
+    token.user_id = user_id
+    token.hash = uuid.uuid4().hex[:6]
+    db.session.add(token)
+    db.session.commit()
+    return render_template('token_show.html', token=token)
+
+@app.route('/token/login/<hash>')
+def token_login(hash):
+    token = ActionToken.query.filter(ActionToken.hash==hash).first()
+    print token
+    if not token:
+        return abort(404)
+    if (token.created - datetime.datetime.utcnow()) > datetime.timedelta(minutes=5):
+        return abort(404)
+    login_user(token.user)
+    db.session.delete(token)
+    db.session.commit()
+    flash('logged in')
+    return redirect(url_for('index'))
 
 @app.route('/admin', methods=['GET', 'POST'])
 @admin_required

@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block title %}New Token{% endblock %}
+{% block body %}
+<div class="row-fluid">
+    <h2>New Token</h2>
+</div>
+<div class="row-fluid">
+    <div class="span9">
+        <p>New login token is: {{ token.hash }}</p>
+    </div>
+</div>
+{% endblock %}
