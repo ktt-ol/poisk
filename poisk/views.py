@@ -134,9 +134,12 @@ def create_profile():
         errors=form.errors, form=form)
 
 
-@app.route('/profile', methods=['GET', 'POST'])
+@app.route('/user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
-def edit_profile():
+def user_show(user_id):
+    if user_id != g.user.id:
+        user = User.query.get(user_id)
+        return render_template('user.html', user=user)
     form = ProfileForm(obj=g.user)
     if form.validate_on_submit():
         if 'delete' in request.form:

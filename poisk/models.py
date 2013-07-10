@@ -16,12 +16,12 @@ class KeyTransaction(db.Model):
     user = db.relationship('User', foreign_keys=[user_id], lazy='joined')
     holder_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     holder = db.relationship('User', foreign_keys=[holder_id], lazy='joined')
-    start = db.Column(db.DateTime, default=datetime.now)
+    start = db.Column(db.DateTime, default=datetime.utcnow)
     end = db.Column(db.DateTime)
 
 def change_key_holder(key, holder):
     if key.current_transaction:
-        key.current_transaction.end = datetime.now()
+        key.current_transaction.end = datetime.utcnow()
     tx = KeyTransaction()
     tx.user = g.user
     tx.key = key

@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block title %}Show user: {{ user }}{% endblock %}
+{% block body %}
+  <h2>User</h2>
+  <p>Nick: {{ user.nick or "" }}</p>
+  <p>Name: {{ user.name or "" }}</p>
+  <p>Email: {{ user.email or "" }}</p>
+  <p>Keys:</p>
+  <ul>
+  {% for key in user.keys %}
+  <li>{{ key.name }}</li>
+  {% endfor %}
+  </ul>
+{% endblock %}
