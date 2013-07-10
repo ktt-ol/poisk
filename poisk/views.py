@@ -7,7 +7,7 @@ from flask import (
 from flask.ext.login import current_user, login_user, login_required, logout_user
 
 from poisk import app, lm, oid
-from poisk.models import db, User, Key, KeyTransaction, change_key_holder
+from poisk.models import db, User, AnonUser, Key, KeyTransaction, change_key_holder
 from poisk.forms import LoginForm, ProfileForm, KeyNewForm
 
 openid_url = 'https://id.kreativitaet-trifft-technik.de/openidserver/users/'
@@ -35,6 +35,8 @@ def keyholder_required(f):
 @lm.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
+lm.anonymous_user = AnonUser
 
 @app.before_request
 def before_request():

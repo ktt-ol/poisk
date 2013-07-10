@@ -1,6 +1,7 @@
 from flask import g
 from datetime import datetime
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.login import AnonymousUserMixin
 
 db = SQLAlchemy()
 
@@ -62,6 +63,9 @@ class User(db.Model):
             return "%s (%s)" % (self.nick, self.name)
         return self.nick
 
+class AnonUser(AnonymousUserMixin):
+    is_admin = False
+    is_keyholder = False
 
 class Key(db.Model):
     __tablename__ = 'keys'
