@@ -33,7 +33,7 @@ def change_key_holder(key, holder):
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    nick = db.Column(db.String, nullable=False, unique=True)
+    nick = db.Column(db.String, unique=True)
     name = db.Column(db.String)
     email = db.Column(db.String)
     is_keyholder = db.Column(db.Boolean, default=False)
@@ -60,6 +60,8 @@ class User(db.Model):
 
     def __str__(self):
         if self.name:
+            if not self.nick:
+                return self.name
             return "%s (%s)" % (self.nick, self.name)
         return self.nick
 
