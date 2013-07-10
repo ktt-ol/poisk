@@ -12,9 +12,9 @@ class KeyTransaction(db.Model):
     key_id = db.Column(db.Integer, db.ForeignKey('keys.id'))
     key = db.relationship('Key', foreign_keys=[key_id])
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    user = db.relationship('User', foreign_keys=[user_id])
+    user = db.relationship('User', foreign_keys=[user_id], lazy='joined')
     holder_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    holder = db.relationship('User', foreign_keys=[holder_id])
+    holder = db.relationship('User', foreign_keys=[holder_id], lazy='joined')
     start = db.Column(db.DateTime, default=datetime.now)
     end = db.Column(db.DateTime)
 
@@ -69,7 +69,7 @@ class Key(db.Model):
     name = db.Column(db.String(), unique=True)
     holder_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     holder = db.relationship('User', backref='keys', lazy='joined')
-    current_transaction_id = db.Column(db.Integer, db.ForeignKey('key_transactions.id'))
+    current_transaction_id = db.Column(db.Integer, db.ForeignKey('key_transactions.id', use_alter=True, name='fk_key_key_transactions_id'))
     current_transaction = db.relationship('KeyTransaction', foreign_keys=[current_transaction_id], post_update=True)
 
     def __init__(self, name):

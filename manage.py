@@ -10,6 +10,13 @@ manager = Manager(app)
 @manager.command
 def init_db():
     db.create_all()
+
+    for k in 'Zuse Lovelace Colmar Turing Pascal Yazu Babbage Napier'.split():
+        db.session.add(Key(name=k))
+
+    u = User('olt')
+    u.is_admin = True
+    db.session.add(u)
     db.session.commit()
 
 

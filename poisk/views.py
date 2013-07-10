@@ -7,7 +7,7 @@ from flask import (
 from flask.ext.login import current_user, login_user, login_required, logout_user
 
 from poisk import app, lm, oid
-from poisk.models import db, User, Key, change_key_holder
+from poisk.models import db, User, Key, KeyTransaction, change_key_holder
 from poisk.forms import LoginForm, ProfileForm, KeyNewForm
 
 openid_url = 'https://id.kreativitaet-trifft-technik.de/openidserver/users/'
@@ -15,16 +15,20 @@ openid_url = 'https://id.kreativitaet-trifft-technik.de/openidserver/users/'
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if not g.user.is_authenticated() or not g.user.is_admin:
+        if not g.user.is_authenticated():
             return redirect(url_for('login', next=request.url))
+        if not g.user.is_admin:
+            return abort(403)
         return f(*args, **kwargs)
     return decorated_function
 
 def keyholder_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if not g.user.is_authenticated() or not g.user.is_keyholder:
+        if not g.user.is_authenticated():
             return redirect(url_for('login', next=request.url))
+        if not g.user.is_keyholder:
+            return abort(403)
         return f(*args, **kwargs)
     return decorated_function
 
@@ -47,6 +51,14 @@ def keys():
     keys = Key.query.all()
     keyholders = User.query.filter(User.is_keyholder==True).all()
     return render_template("keys.html", keys=keys, keyholders=keyholders)
+
+@app.route('/key/<int:key_id>')
+@keyholder_required
+def key(key_id):
+    query = KeyTransaction.query.filter(KeyTransaction.key_id==key_id)
+    transactions = query.order_by(db.desc(KeyTransaction.start)).limit(50).all()
+    key = Key.query.get(key_id)
+    return render_template("key.html", key=key, transactions=transactions)
 
 @app.route('/key/<int:key_id>/take', methods=['POST'])
 @oid.loginhandler
