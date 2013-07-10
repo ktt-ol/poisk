@@ -16,6 +16,8 @@
         <input type="hidden" name="admin" value="{{ not user.is_admin }}">
         {% if user.is_admin %}
         <input class="btn btn-warning" type="submit" value="Yes">
+        {% elif not user.nick %}
+        <input class="btn" type="submit" disabled value="&mdash;">
         {% else %}
         <input class="btn" type="submit" value="No">
         {% endif %}
@@ -49,7 +51,7 @@
     {% for key in keys %}
     <tr>
         <td>{{ key.name }}</td>
-        <td>{{ key.holder.nick }}</td>
+        <td>{{ key.holder or "" }}</td>
         <td>{{ change_keyholder(key, keyholders) }}</td>
     </tr>
     {% endfor %}
@@ -75,9 +77,9 @@
     <tbody>
     {% for user in users %}
     <tr>
-        <td>{{ user.nick }}</td>
-        <td>{{ user.name }}</td>
-        <td>{{ user.email }}</td>
+        <td>{{ user.nick or "" }}</td>
+        <td>{{ user.name or "" }}</td>
+        <td>{{ user.email or "" }}</td>
         <td>{{ change_is_keyholder(user) }}</td>
         <td>{{ change_is_admin(user) }}</td>
     </tr>

@@ -37,7 +37,7 @@
             {% for key in keys %}
             <tr>
                 <td><a href="{{ url_for('key', key_id=key.id) }}">{{ key.name }}</a></td>
-                <td>{{ key.holder }}</td>
+                <td>{{ key.holder or "" }}</td>
                 <td>
             {% if g.user != key.holder %}
             {{ take_key(key) }}
