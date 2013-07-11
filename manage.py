@@ -15,7 +15,12 @@ def init_db():
         db.session.add(Key(name=k))
 
     u = User('olt')
+    u.is_keyholder = True
     u.is_admin = True
+    db.session.add(u)
+    u = User(None)
+    u.is_keymanager = True
+    u.name = "Surfstation"
     db.session.add(u)
     db.session.commit()
 

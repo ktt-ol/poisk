@@ -39,6 +39,7 @@ class User(db.Model):
     is_keyholder = db.Column(db.Boolean, default=False)
     is_admin = db.Column(db.Boolean, default=False)
     is_public = db.Column(db.Boolean)
+    is_keymanager = db.Column(db.Boolean)
 
     def is_authenticated(self):
         return True
@@ -68,6 +69,7 @@ class User(db.Model):
 class AnonUser(AnonymousUserMixin):
     is_admin = False
     is_keyholder = False
+    is_keymanager = False
 
 class Key(db.Model):
     __tablename__ = 'keys'

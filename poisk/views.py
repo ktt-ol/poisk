@@ -1,5 +1,5 @@
+from urlparse import urlparse, urljoin
 import uuid
-import datetime
 from functools import wraps
 from flask import (
     render_template, g, session, request, redirect, flash, url_for,
@@ -10,7 +10,7 @@ from flask.ext.login import current_user, login_user, login_required, logout_use
 
 from poisk import app, lm, oid
 from poisk.models import db, User, AnonUser, Key, KeyTransaction, change_key_holder, ActionToken
-from poisk.forms import LoginForm, ProfileForm, KeyNewForm
+from poisk.forms import LoginForm, ProfileForm, KeyNewForm, PinLoginForm
 
 openid_url = 'https://id.kreativitaet-trifft-technik.de/openidserver/users/'
 
@@ -29,7 +29,7 @@ def keyholder_required(f):
     def decorated_function(*args, **kwargs):
         if not g.user.is_authenticated():
             return redirect(url_for('login', next=request.url))
-        if not g.user.is_keyholder:
+        if not g.user.is_keyholder and not g.user.is_keymanager:
             return abort(403)
         return f(*args, **kwargs)
     return decorated_function
@@ -65,12 +65,12 @@ def key(key_id):
     return render_template("key.html", key=key, transactions=transactions)
 
 @app.route('/key/<int:key_id>/take', methods=['POST'])
-@oid.loginhandler
+@keyholder_required
 def key_take(key_id):
     key = Key.query.get(key_id)
     change_key_holder(key, g.user)
     db.session.commit()
-    return redirect(url_for('keys'))
+    return redirect_back('keys')
 
 @app.route('/login', methods=['GET', 'POST'])
 @oid.loginhandler
@@ -83,8 +83,22 @@ def login():
         openid = openid_url + form.openid.data
         return oid.try_login(openid, ask_for=['email', 'fullname',
                                                   'nickname'])
+
     return render_template('login.html', next=oid.get_next_url(),
         form=form, error=oid.fetch_error())
+
+@app.route('/login/pin', methods=['GET', 'POST'])
+def login_pin():
+    form = PinLoginForm()
+    if form.validate_on_submit():
+        token = ActionToken.query.filter(ActionToken.hash==form.pin.data).first()
+        login_user(token.user)
+        db.session.delete(token)
+        db.session.commit()
+        flash('logged in')
+        return redirect(oid.get_next_url())
+    return render_template('login_pin.html', next=oid.get_next_url(),
+        form=form)
 
 @oid.after_login
 def create_or_login(resp):
@@ -169,20 +183,6 @@ def token_create(user_id):
     db.session.commit()
     return render_template('token_show.html', token=token)
 
-@app.route('/token/login/<hash>')
-def token_login(hash):
-    token = ActionToken.query.filter(ActionToken.hash==hash).first()
-    print token
-    if not token:
-        return abort(404)
-    if (token.created - datetime.datetime.utcnow()) > datetime.timedelta(minutes=5):
-        return abort(404)
-    login_user(token.user)
-    db.session.delete(token)
-    db.session.commit()
-    flash('logged in')
-    return redirect(url_for('index'))
-
 @app.route('/admin', methods=['GET', 'POST'])
 @admin_required
 def admin():
@@ -221,7 +221,7 @@ def change_keyholder(key_id):
     change_key_holder(key, user)
     db.session.commit()
     flash("changed keyholder for %s to %s" % (key.name, user.nick), 'success')
-    return redirect(url_for("admin"))
+    return redirect_back('keys')
 
 @app.route('/key/new', methods=['GET', 'POST'])
 @admin_required
@@ -246,4 +246,21 @@ def logout():
     flash(u'You have been signed out')
     return redirect(oid.get_next_url())
 
+def redirect_back(endpoint, **values):
+    target = get_redirect_target()
+    if not target or not is_safe_url(target):
+        target = url_for(endpoint, **values)
+    return redirect(target)
 
+def get_redirect_target():
+    for target in request.values.get('next'), request.referrer:
+        if not target:
+            continue
+        if is_safe_url(target):
+            return target
+
+def is_safe_url(target):
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return test_url.scheme in ('http', 'https') and \
+           ref_url.netloc == test_url.netloc
