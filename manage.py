@@ -1,11 +1,12 @@
 # manage.py
 
-from flask.ext.script import Manager
+from flask.ext.script import Manager, Server
 
 from poisk import app
 from poisk.models import db, User, Key
 
 manager = Manager(app)
+manager.add_command("runserver", Server(threaded=True))
 
 @manager.command
 def init_db():
