@@ -21,14 +21,13 @@
     {% endif %}
 {%- endmacro %}
 
-{% macro keys_list(keys) %}
+{% macro keys_list(keys, keyholders) %}
     <table class="table table-hover">
         <thead>
         <tr>
             <th>Key</th>
             <th>Keyholder</th>
-            <th>Take</th>
-            <th>Give</th>
+            <th>Change</th>
         </tr>
         </thead>
         <tbody>
@@ -40,8 +39,6 @@
         {% if g.user != key.holder and not g.user.is_keymanager %}
         {{ take_key_form(key) }}
         {% endif %}
-            </td>
-            <td>
         {% if g.user == key.holder or g.user.is_keymanager %}
             {{ give_key_form(key, keyholders) }}
         {% endif %}
