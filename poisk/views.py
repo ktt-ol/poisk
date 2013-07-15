@@ -1,5 +1,5 @@
 from urlparse import urlparse, urljoin
-import uuid
+import random
 from functools import wraps
 from flask import (
     render_template, g, session, request, redirect, flash, url_for,
@@ -170,15 +170,15 @@ def user_show(user_id):
         return redirect(url_for('edit_profile'))
     return render_template('edit_profile.html', form=form)
 
-@app.route('/token/create/<int:user_id>')
-def token_create(user_id):
+@app.route('/user/<int:user_id>/createpin')
+def pin_create(user_id):
     if g.user.id != user_id and not g.user.is_admin:
         return abort(403)
 
     ActionToken.query.filter(ActionToken.user==g.user).delete()
     token = ActionToken()
     token.user_id = user_id
-    token.hash = uuid.uuid4().hex[:6]
+    token.hash = "%06d" % random.randint(0, 999999)
     db.session.add(token)
     db.session.commit()
     return render_template('token_show.html', token=token)

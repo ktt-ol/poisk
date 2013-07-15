@@ -11,4 +11,5 @@
       <p>Public? {{ form.is_public() }}</p>
       <input type=submit value="Edit profile">
   </form>
+  <a href="{{ url_for('pin_create', user_id=g.user.id) }}">Create login PIN</a>
 {% endblock %}
