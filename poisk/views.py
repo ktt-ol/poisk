@@ -8,7 +8,7 @@ from flask import (
 
 from flask.ext.login import current_user, login_user, login_required, logout_user
 
-from poisk import app, lm, oid
+from poisk import app, lm, oid, babel
 from poisk.models import db, User, AnonUser, Key, KeyTransaction, change_key_holder, ActionToken
 from poisk.forms import LoginForm, ProfileForm, KeyNewForm, PinLoginForm
 
@@ -33,6 +33,14 @@ def keyholder_required(f):
             return abort(403)
         return f(*args, **kwargs)
     return decorated_function
+
+@babel.timezoneselector
+def get_timezone():
+    return 'Europe/Berlin'
+
+@babel.localeselector
+def get_locale():
+    return 'de_DE'
 
 @lm.user_loader
 def load_user(id):

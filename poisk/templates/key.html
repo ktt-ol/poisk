@@ -19,7 +19,7 @@
             <tbody>
             {% for t in transactions %}
             <tr>
-                <td>{{ t.start }}</td>
+                <td>{{ t.start | datetimeformat }}</td>
                 <td>{{ macros.user_link(t.holder) }}</td>
                 <td>{{ macros.user_link(t.user) }}</td>
                 <td>
