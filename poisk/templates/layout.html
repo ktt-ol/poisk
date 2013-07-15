@@ -29,7 +29,6 @@
               {% if g.user.is_authenticated() %}
               <li><a href="{{ url_for("keys") }}">Keys</a></li>
               {% endif %}
-              <li><a href="{{ url_for("about") }}">About</a></li>
               {% if g.user.is_authenticated() and g.user.is_admin %}
               <li><a href="{{ url_for("admin") }}">Admin</a></li>
               {% endif %}
@@ -61,7 +60,7 @@
 
       <footer>
       <hr>
-        <p>&copy; Company 2013</p>
+      <p><a href="{{ url_for('about') }}">Poisk?</a></p>
       </footer>
 
     </div><!--/container-->
