@@ -1,28 +1,11 @@
 {% extends "layout.html" %}
+
+{% import "_macros.html" as macros %} 
 {% block body %}
 <div class="row-fluid">
     <div class="span4">
         <h2>Keys</h2>
-<table class="table">
-    <thead>
-    <tr>
-        <th>Key</th>
-        <th>Keyholder</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for key in keys %}
-    <tr>
-        <td>{{ key.name }}</td>
-        {% if g.user.is_authenticated() and g.user.is_keyholder %}
-        <td>{{ key.holder }}</td>
-        {% else %}
-        <td>{{ key.holder.nick }}</td>
-        {% endif %}
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
+        {{ macros.keys_list_ro(keys) }}
     </div><!--/span-->
 </div><!--/span-->
 {% endblock %}

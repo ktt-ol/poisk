@@ -13,7 +13,6 @@ class PinLoginForm(Form):
     remember_me = BooleanField('remember_me', default=True)
 
     def validate_pin(form, field):
-        print 'fooooo'
         token = ActionToken.query.filter(ActionToken.hash==field.data).first()
         if not token:
             raise ValidationError('Invalid PIN')
