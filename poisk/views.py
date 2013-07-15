@@ -183,13 +183,18 @@ def pin_create(user_id):
     db.session.commit()
     return render_template('token_show.html', token=token)
 
-@app.route('/admin', methods=['GET', 'POST'])
+@app.route('/admin/users', methods=['GET', 'POST'])
 @admin_required
-def admin():
+def admin_users():
     users = User.query.all()
+    return render_template('admin_users.html', users=users)
+
+@app.route('/admin/keys', methods=['GET', 'POST'])
+@admin_required
+def admin_keys():
     keys = Key.query.all()
     keyholders = User.query.filter(User.is_keyholder==True).all()
-    return render_template('admin_list.html', users=users, keys=keys, keyholders=keyholders)
+    return render_template('admin_keys.html', keys=keys, keyholders=keyholders)
 
 @app.route('/user/<user_id>/change_keyholder', methods=['POST'])
 @admin_required
@@ -199,7 +204,7 @@ def change_is_keyholder(user_id):
     user.is_keyholder = is_keyholder
     db.session.commit()
     flash("changed keyholder status for %s" % user.nick, 'success')
-    return redirect(url_for("admin"))
+    return redirect_back("admin_users")
 
 @app.route('/user/<int:user_id>/change_admin', methods=['POST'])
 @admin_required
@@ -223,9 +228,9 @@ def change_keyholder(key_id):
     flash("changed keyholder for %s to %s" % (key.name, user.nick), 'success')
     return redirect_back('keys')
 
-@app.route('/key/new', methods=['GET', 'POST'])
+@app.route('/key/add', methods=['GET', 'POST'])
 @admin_required
-def key_new():
+def admin_key_add():
     form = KeyNewForm()
     if form.validate_on_submit():
         key = Key(form.name.data)

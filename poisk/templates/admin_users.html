@@ -24,45 +24,8 @@
     </form>
 {%- endmacro %}
 
-{% macro change_keyholder(key, keyholders) -%}
-    <form class="form-inline" action="{{ url_for("change_keyholder", key_id=key.id) }}" method="POST">
-        <select name="keyholder_id">
-            {% for keyholder in keyholders %}
-            <option value="{{keyholder.id}}" {% if key.holder_id == keyholder.id %}selected{% endif %}>{{ keyholder }}</option>
-            {% endfor %}
-        </select>
-        <input class="btn" type="submit" value="change">
-    </form>
-{%- endmacro %}
-
 {% block title %}User list{% endblock %}
 {% block body %}
-<h2>Key list</h2>
-<div class="row-fluid">
-<table class="table">
-    <thead>
-    <tr>
-        <th>Key</th>
-        <th>Keyholder</th>
-        <th>New keyholder</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for key in keys %}
-    <tr>
-        <td>{{ key.name }}</td>
-        <td>{{ key.holder or "" }}</td>
-        <td>{{ change_keyholder(key, keyholders) }}</td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
-</div>
-
-<div class="row-fluid">
-<p><a href="{{ url_for('key_new') }}">Add key</a></p>
-</div>
-
 <h2>User list</h2>
 <table class="table">
     <thead>

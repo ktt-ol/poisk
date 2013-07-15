@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% import "_macros.html" as macros %}
+
+{% macro change_keyholder(key, keyholders) -%}
+    <form class="form-inline" action="{{ url_for("change_keyholder", key_id=key.id) }}" method="POST">
+        <select name="keyholder_id">
+            {% for keyholder in keyholders %}
+            <option value="{{keyholder.id}}" {% if key.holder_id == keyholder.id %}selected{% endif %}>{{ keyholder }}</option>
+            {% endfor %}
+        </select>
+        <input class="btn" type="submit" value="change">
+    </form>
+{%- endmacro %}
+
+{% block title %}User list{% endblock %}
+{% block body %}
+<h2>Key list</h2>
+<div class="row-fluid">
+    <div class="span9">
+        {{ macros.keys_list(keys, keyholders, admin_list=True) }}
+    </div>
+</div>
+
+{% endblock %}
