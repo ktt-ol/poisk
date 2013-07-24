@@ -69,7 +69,7 @@ class User(db.Model):
     @property
     def public_name(self):
         if self.is_public:
-            return str(self)
+            return unicode(self)
         if not self.nick: # special users are "public"
             return self.name
         return self.nick
