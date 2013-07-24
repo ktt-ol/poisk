@@ -10,3 +10,6 @@ CSRF_ENABLED = True
 SECRET_KEY = 'fLuidIU(*ND£LKjnD(DNLKJS'
 
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
+
+LOG_FILE = os.path.join(basedir, 'poisk.log')
+ADMIN_EMAILS = []

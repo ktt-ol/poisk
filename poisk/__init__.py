@@ -16,3 +16,33 @@ lm.login_view = 'login'
 oid = OpenID(app, os.path.join(basedir, 'tmp'))
 
 from poisk import views, models
+
+import logging
+from logging.handlers import SMTPHandler
+
+if not app.debug and app.config.get('ADMIN_EMAILS'):
+    mail_handler = SMTPHandler('127.0.0.1',
+                               'poisk-error@kreativitaet-trifft-technik.de',
+                               app.config['ADMIN_EMAILS'], 'Poisk Failed')
+    mail_handler.setFormatter(logging.Formatter('''
+Message type:       %(levelname)s
+Location:           %(pathname)s:%(lineno)d
+Module:             %(module)s
+Function:           %(funcName)s
+Time:               %(asctime)s
+
+Message:
+
+%(message)s
+'''))
+    mail_handler.setLevel(logging.ERROR)
+    app.logger.addHandler(mail_handler)
+
+if not app.debug and app.config.get('LOG_FILE'):
+    file_handler = logging.FileHandler(app.config['LOG_FILE'])
+    file_handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s '
+        '[in %(pathname)s:%(lineno)d]'
+    ))
+    file_handler.setLevel(logging.WARNING)
+    app.logger.addHandler(file_handler)
