@@ -1,15 +1,32 @@
 {% extends "layout.html" %}
 {% block title %}Edit profile{% endblock %}
 {% block body %}
-  <h2>Edit profile</h2>
-  <form action="" method=post>
+  <form action="" class="form-horizontal" method=post>
+      <fieldset>
+      <legend>Edit profile</legend>
     {{ form.hidden_tag() }}
     {% if error %}<p class=error><strong>Error:</strong> {{ error }}</p>{% endif %}
-    <p>
-      {{ form.name() }}
-      <p>{{ form.email() }}</p>
-      <p>Public? {{ form.is_public() }}</p>
-      <input type=submit value="Edit profile">
+  <div class="control-group">
+    <label class="control-label" for="name">Name</label>
+    <div class="controls">
+        {{ form.name() }}
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="name">Email</label>
+    <div class="controls">
+        {{ form.email() }}
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+        <label class="checkbox">
+            {{ form.is_public() }}
+            Public?
+        </label>
+      <input type=submit class="btn" value="Edit profile">
+    </div>
+  </div>
   </form>
   <a href="{{ url_for('pin_create', user_id=g.user.id) }}">Create login PIN</a>
 {% endblock %}
