@@ -227,7 +227,7 @@ def change_is_admin(user_id):
     user.is_admin = is_admin
     db.session.commit()
     flash("changed admin status for %s" % user.nick, 'success')
-    return redirect(url_for("admin"))
+    return redirect_back("admin_users")
 
 @app.route('/key/<int:key_id>/change_keyholder', methods=['POST'])
 @keyholder_required
@@ -237,7 +237,7 @@ def change_keyholder(key_id):
     change_key_holder(key, user)
     db.session.commit()
     flash("changed keyholder for %s to %s" % (key.name, user.nick), 'success')
-    return redirect_back('keys')
+    return redirect_back('admin_keys')
 
 @app.route('/key/add', methods=['GET', 'POST'])
 @admin_required
@@ -248,7 +248,7 @@ def admin_key_add():
         db.session.add(key)
         db.session.commit()
         flash('Key added', 'success')
-        return redirect(url_for("admin"))
+        return redirect_back('admin_keys')
     return render_template('key_add.html', form=form)
 
 
