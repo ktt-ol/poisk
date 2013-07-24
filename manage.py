@@ -1,12 +1,22 @@
 # manage.py
 
-from flask.ext.script import Manager, Server
+from flask.ext.script import Manager, Server, Shell
 
-from poisk import app
+from poisk import app, models
 from poisk.models import db, User, Key
+
+def _make_context():
+    return dict(
+        app=app,
+        db=db,
+        models=models,
+        User=User,
+        Key=Key,
+    )
 
 manager = Manager(app)
 manager.add_command("runserver", Server(threaded=True, use_reloader=True))
+manager.add_command("shell", Shell(make_context=_make_context))
 
 @manager.command
 def init_db():
