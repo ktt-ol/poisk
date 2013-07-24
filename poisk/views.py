@@ -107,7 +107,7 @@ def login_pin():
         db.session.delete(token)
         db.session.commit()
         flash('logged in')
-        return redirect(oid.get_next_url())
+        return redirect_back('index')
     return render_template('login_pin.html', next=oid.get_next_url(),
         form=form)
 
