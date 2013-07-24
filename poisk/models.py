@@ -66,6 +66,14 @@ class User(db.Model):
             return "%s (%s)" % (self.nick, self.name)
         return self.nick
 
+    @property
+    def public_name(self):
+        if self.is_public:
+            return str(self)
+        if not self.nick: # special users are "public"
+            return self.name
+        return self.nick
+
 class AnonUser(AnonymousUserMixin):
     is_admin = False
     is_keyholder = False

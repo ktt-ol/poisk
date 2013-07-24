@@ -64,8 +64,8 @@
         <tbody>
         {% for key in keys %}
         <tr>
-            <td><a href="{{ url_for('key', key_id=key.id) }}">{{ key.name }}</a></td>
-            <td>{{ user_link(key.holder) }}</td>
+            <td>{{ key.name }}</td>
+            <td>{{ key.holder.public_name }}</td>
         </tr>
         {% endfor %}
         </tbody>

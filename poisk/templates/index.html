@@ -5,7 +5,11 @@
 <div class="row-fluid">
     <div class="span4">
         <h2>Keys</h2>
-        {{ macros.keys_list_ro(keys) }}
+        {% if g.user.is_keyholder %}
+            {{ macros.keys_list(keys, keyholders) }}
+        {% else %}
+            {{ macros.keys_list_ro(keys) }}
+        {% endif %}
     </div><!--/span-->
 </div><!--/span-->
 {% endblock %}

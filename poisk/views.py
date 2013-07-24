@@ -55,7 +55,10 @@ def before_request():
 @app.route('/')
 def index():
     keys = Key.query.all()
-    return render_template("index.html", keys=keys)
+    keyholders = []
+    if g.user.is_keyholder:
+        keyholders = User.query.filter(User.is_keyholder==True).all()
+    return render_template("index.html", keys=keys, keyholders=keyholders)
 
 @app.route('/keys')
 @keyholder_required
