@@ -175,7 +175,7 @@ def user_show(user_id):
         g.user.email = form.email.data
         g.user.is_public = form.is_public.data
         db.session.commit()
-        return redirect(url_for('user_show'))
+        return redirect(url_for('user_show', user_id=user_id))
     return render_template('edit_profile.html', form=form)
 
 @app.route('/user/<int:user_id>/createpin')
