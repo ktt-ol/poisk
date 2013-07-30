@@ -37,4 +37,7 @@ def init_db():
 
 
 if __name__ == "__main__":
+    import os
+    if os.environ.get('DEBUG') == '1':
+        app.debug = True
     manager.run()
