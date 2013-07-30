@@ -54,7 +54,7 @@ def before_request():
 
 @app.route('/')
 def index():
-    keys = Key.query.all()
+    keys = Key.query.outerjoin(Key.current_transaction).order_by(db.desc(KeyTransaction.start)).all()
     keyholders = []
     if g.user.is_keyholder:
         keyholders = User.query.filter(User.is_keyholder==True).all()
