@@ -3,7 +3,7 @@ import random
 from functools import wraps
 from flask import (
     render_template, g, session, request, redirect, flash, url_for,
-    abort,
+    abort, jsonify,
 )
 
 from flask.ext.login import current_user, login_user, login_required, logout_user
@@ -261,6 +261,18 @@ def logout():
     logout_user()
     flash(u'You have been signed out')
     return redirect(oid.get_next_url())
+
+@app.route('/api/v1/keyholder.json')
+def api_keyholder():
+    current_keyholder = User.query.join(User.keys).all()
+    last_transaction = KeyTransaction.query.order_by(db.desc(KeyTransaction.start)).first()
+    resp = jsonify(
+        current_keyholder=[k.nick for k in current_keyholder if k.nick],
+    )
+    resp.date = last_transaction.start
+    resp.add_etag()
+    resp.make_conditional(request)
+    return resp
 
 def redirect_back(endpoint, **values):
     target = get_redirect_target()
