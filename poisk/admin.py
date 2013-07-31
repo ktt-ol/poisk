@@ -20,13 +20,13 @@ def restrict_to_admins():
 @admin.route('/admin/users', methods=['GET', 'POST'])
 def users():
     users = User.query.all()
-    return render_template('admin_users.html', users=users)
+    return render_template('admin/users.html', users=users)
 
 @admin.route('/admin/keys', methods=['GET', 'POST'])
 def keys():
     keys = Key.query.all()
     keyholders = User.query.filter(User.is_keyholder==True).all()
-    return render_template('admin_keys.html', keys=keys, keyholders=keyholders)
+    return render_template('admin/keys.html', keys=keys, keyholders=keyholders)
 
 @admin.route('/key/add', methods=['GET', 'POST'])
 def key_add():
@@ -37,7 +37,7 @@ def key_add():
         db.session.commit()
         flash('Key added', 'success')
         return redirect_back('admin_keys')
-    return render_template('key_add.html', form=form)
+    return render_template('admin/key_add.html', form=form)
 
 @admin.route('/user/<user_id>/change_keyholder', methods=['POST'])
 def change_is_keyholder(user_id):
