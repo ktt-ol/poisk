@@ -25,7 +25,7 @@ def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not g.user.is_authenticated():
-            return redirect(url_for('login', next=request.url))
+            return redirect(url_for('user.login', next=request.url))
         if not g.user.is_admin:
             return abort(403)
         return f(*args, **kwargs)
@@ -35,7 +35,7 @@ def keyholder_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not g.user.is_authenticated():
-            return redirect(url_for('login', next=request.url))
+            return redirect(url_for('user.login', next=request.url))
         if not g.user.is_keyholder and not g.user.is_keymanager:
             return abort(403)
         return f(*args, **kwargs)

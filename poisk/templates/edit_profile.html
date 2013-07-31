@@ -28,5 +28,5 @@
     </div>
   </div>
   </form>
-  <a href="{{ url_for('pin_create', user_id=g.user.id) }}">Create login PIN</a>
+  <a href="{{ url_for('user.pin_create', user_id=g.user.id) }}">Create login PIN</a>
 {% endblock %}

@@ -34,8 +34,8 @@
             </ul>
             <ul class="nav pull-right">
               {% if g.user.is_authenticated() %}
-              <li><a href="{{ url_for("user_show", user_id=g.user.id) }}" class="navbar-link">Logged in as {{ g.user.nick or g.user.name }}</a></li>
-              <li><a href="{{ url_for('logout') }}" class="navbar-link">Logout</a></li>
+              <li><a href="{{ url_for("user.show", user_id=g.user.id) }}" class="navbar-link">Logged in as {{ g.user.nick or g.user.name }}</a></li>
+              <li><a href="{{ url_for('user.logout') }}" class="navbar-link">Logout</a></li>
               {% else %}
               <li><a href="/login" class="navbar-link">Log in</a></li>
               {% endif %}

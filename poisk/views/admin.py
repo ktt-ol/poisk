@@ -13,7 +13,7 @@ admin = Blueprint('admin', __name__)
 @admin.before_request
 def restrict_to_admins():
     if not g.user.is_authenticated():
-        return redirect(url_for('login', next=request.url))
+        return redirect(url_for('user.login', next=request.url))
     if not g.user.is_admin:
         return abort(403)
 

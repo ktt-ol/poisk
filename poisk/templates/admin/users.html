@@ -46,7 +46,7 @@
         <td>{{ user.email or "" }}</td>
         <td>{{ change_is_keyholder(user) }}</td>
         <td>{{ change_is_admin(user) }}</td>
-        <td><a href="{{ url_for('pin_create', user_id=user.id) }}">Create PIN</a></td>
+        <td><a href="{{ url_for('user.pin_create', user_id=user.id) }}">Create PIN</a></td>
     </tr>
     {% endfor %}
     </tbody>
