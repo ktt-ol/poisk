@@ -15,9 +15,7 @@ lm.init_app(app)
 lm.login_view = 'login'
 oid = OpenID(app, os.path.join(basedir, 'tmp'))
 
-from poisk import views
-
-from poisk import admin, api
+from poisk.views import admin, api, main
 
 app.register_blueprint(admin.admin, url_prefix='/admin')
 app.register_blueprint(api.api, url_prefix='/api')
