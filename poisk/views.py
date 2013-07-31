@@ -1,6 +1,4 @@
-from urlparse import urlparse, urljoin
 import random
-from functools import wraps
 from flask import (
     render_template, g, session, request, redirect, flash, url_for,
     abort, jsonify,
@@ -10,29 +8,11 @@ from flask.ext.login import current_user, login_user, login_required, logout_use
 
 from poisk import app, lm, oid, babel
 from poisk.models import db, User, AnonUser, Key, KeyTransaction, change_key_holder, ActionToken
-from poisk.forms import LoginForm, ProfileForm, KeyNewForm, PinLoginForm
+from poisk.forms import LoginForm, ProfileForm, PinLoginForm
+from poisk.helpers import redirect_back, keyholder_required
 
 openid_url = 'https://id.kreativitaet-trifft-technik.de/openidserver/users/'
 
-def admin_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if not g.user.is_authenticated():
-            return redirect(url_for('login', next=request.url))
-        if not g.user.is_admin:
-            return abort(403)
-        return f(*args, **kwargs)
-    return decorated_function
-
-def keyholder_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if not g.user.is_authenticated():
-            return redirect(url_for('login', next=request.url))
-        if not g.user.is_keyholder and not g.user.is_keymanager:
-            return abort(403)
-        return f(*args, **kwargs)
-    return decorated_function
 
 @babel.timezoneselector
 def get_timezone():
@@ -194,40 +174,7 @@ def pin_create(user_id):
     db.session.commit()
     return render_template('token_show.html', token=token)
 
-@app.route('/admin/users', methods=['GET', 'POST'])
-@admin_required
-def admin_users():
-    users = User.query.all()
-    return render_template('admin_users.html', users=users)
 
-@app.route('/admin/keys', methods=['GET', 'POST'])
-@admin_required
-def admin_keys():
-    keys = Key.query.all()
-    keyholders = User.query.filter(User.is_keyholder==True).all()
-    return render_template('admin_keys.html', keys=keys, keyholders=keyholders)
-
-@app.route('/user/<user_id>/change_keyholder', methods=['POST'])
-@admin_required
-def change_is_keyholder(user_id):
-    is_keyholder = request.form['keyholder'].lower() == 'true'
-    user = User.query.get(user_id)
-    user.is_keyholder = is_keyholder
-    db.session.commit()
-    flash("changed keyholder status for %s" % user.nick, 'success')
-    return redirect_back("admin_users")
-
-@app.route('/user/<int:user_id>/change_admin', methods=['POST'])
-@admin_required
-def change_is_admin(user_id):
-    is_admin = request.form['admin'].lower() == 'true'
-    if g.user.id == user_id:
-        raise abort(400, "can't change own admin status")
-    user = User.query.get(user_id)
-    user.is_admin = is_admin
-    db.session.commit()
-    flash("changed admin status for %s" % user.nick, 'success')
-    return redirect_back("admin_users")
 
 @app.route('/key/<int:key_id>/change_keyholder', methods=['POST'])
 @keyholder_required
@@ -238,19 +185,6 @@ def change_keyholder(key_id):
     db.session.commit()
     flash("changed keyholder for %s to %s" % (key.name, user.nick), 'success')
     return redirect_back('admin_keys')
-
-@app.route('/key/add', methods=['GET', 'POST'])
-@admin_required
-def admin_key_add():
-    form = KeyNewForm()
-    if form.validate_on_submit():
-        key = Key(form.name.data)
-        db.session.add(key)
-        db.session.commit()
-        flash('Key added', 'success')
-        return redirect_back('admin_keys')
-    return render_template('key_add.html', form=form)
-
 
 @app.route('/about')
 def about():
@@ -274,21 +208,3 @@ def api_keyholder():
     resp.make_conditional(request)
     return resp
 
-def redirect_back(endpoint, **values):
-    target = get_redirect_target()
-    if not target or not is_safe_url(target):
-        target = url_for(endpoint, **values)
-    return redirect(target)
-
-def get_redirect_target():
-    for target in request.values.get('next'), request.referrer:
-        if not target:
-            continue
-        if is_safe_url(target):
-            return target
-
-def is_safe_url(target):
-    ref_url = urlparse(request.host_url)
-    test_url = urlparse(urljoin(request.host_url, target))
-    return test_url.scheme in ('http', 'https') and \
-           ref_url.netloc == test_url.netloc

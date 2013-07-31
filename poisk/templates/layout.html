@@ -25,9 +25,9 @@
               <li class="dropdown">
                   <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin<b class="caret"></b></a>
                   <ul class="dropdown-menu" role="menu">
-                      <li><a href="{{ url_for("admin_users") }}">Users</a></li>
-                      <li><a href="{{ url_for("admin_keys") }}">Keys</a></li>
-                      <li><a href="{{ url_for("admin_key_add") }}">Key add</a></li>
+                      <li><a href="{{ url_for("admin.users") }}">Users</a></li>
+                      <li><a href="{{ url_for("admin.keys") }}">Keys</a></li>
+                      <li><a href="{{ url_for("admin.key_add") }}">Key add</a></li>
                   </ul>
               </li>
               {% endif %}

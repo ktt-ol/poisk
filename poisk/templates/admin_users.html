@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% macro change_is_keyholder(user) -%}
-    <form class="form-inline" action="{{ url_for("change_is_keyholder", user_id=user.id) }}" method="POST">
+    <form class="form-inline" action="{{ url_for(".change_is_keyholder", user_id=user.id) }}" method="POST">
         <input type="hidden" name="keyholder" value="{{ not user.is_keyholder }}">
         {% if user.is_keyholder %}
         <input class="btn btn-success" type="submit" value="Yes">
@@ -12,7 +12,7 @@
 {%- endmacro %}
 
 {% macro change_is_admin(user) -%}
-    <form class="form-inline" action="{{ url_for("change_is_admin", user_id=user.id) }}" method="POST">
+    <form class="form-inline" action="{{ url_for(".change_is_admin", user_id=user.id) }}" method="POST">
         <input type="hidden" name="admin" value="{{ not user.is_admin }}">
         {% if user.is_admin %}
         <input class="btn btn-warning" type="submit" value="Yes">

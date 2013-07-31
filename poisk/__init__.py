@@ -17,6 +17,11 @@ oid = OpenID(app, os.path.join(basedir, 'tmp'))
 
 from poisk import views, models
 
+from poisk import admin
+
+app.register_blueprint(admin.admin, url_prefix='/admin')
+
+
 import logging
 from logging.handlers import SMTPHandler
 
