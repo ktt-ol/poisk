@@ -183,7 +183,7 @@ def change_keyholder(key_id):
     key = Key.query.get(key_id)
     change_key_holder(key, user)
     db.session.commit()
-    flash("changed keyholder for %s to %s" % (key.name, user.nick), 'success')
+    flash("changed keyholder for %s to %s" % (key.name, user), 'success')
     return redirect_back('admin_keys')
 
 @app.route('/about')
