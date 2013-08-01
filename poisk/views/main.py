@@ -1,14 +1,11 @@
-import random
 from flask import (
-    render_template, g, session, request, redirect, flash, url_for,
-    abort, jsonify,
+    render_template, g, request, flash,
 )
 
-from flask.ext.login import current_user, login_user, login_required, logout_user
+from flask.ext.login import current_user
 
-from poisk import app, lm, oid, babel
-from poisk.models import db, User, AnonUser, Key, KeyTransaction, change_key_holder, ActionToken
-from poisk.forms import LoginForm, ProfileForm, PinLoginForm
+from poisk import app, lm, babel
+from poisk.models import db, User, AnonUser, Key, KeyTransaction, change_key_holder
 from poisk.helpers import redirect_back, keyholder_required
 
 openid_url = 'https://id.kreativitaet-trifft-technik.de/openidserver/users/'
