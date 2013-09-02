@@ -10,6 +10,7 @@ from poisk import lm, oid
 from poisk.models import db, User, AnonUser, ActionToken
 from poisk.forms import LoginForm, ProfileForm, PinLoginForm
 from poisk.helpers import redirect_back
+from poisk.notify import notify_admins_new_user
 
 openid_url = 'https://id.kreativitaet-trifft-technik.de/openidserver/users/'
 
@@ -88,6 +89,9 @@ def create_profile():
         db.session.commit()
         login_user(user)
         session.pop('openid')
+
+        notify_admins_new_user(user)
+
         return redirect(oid.get_next_url())
 
     if request.method == 'GET':
@@ -96,7 +100,6 @@ def create_profile():
 
     return render_template('create_profile.html', next_url=oid.get_next_url(),
         errors=form.errors, form=form)
-
 
 @user.route('/user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
@@ -117,7 +120,7 @@ def show(user_id):
         g.user.email = form.email.data
         g.user.is_public = form.is_public.data
         db.session.commit()
-        return redirect(url_for('show', user_id=user_id))
+        return redirect(url_for('.show', user_id=user_id))
     return render_template('edit_profile.html', form=form)
 
 @user.route('/user/<int:user_id>/createpin')

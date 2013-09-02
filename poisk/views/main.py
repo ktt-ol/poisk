@@ -7,6 +7,7 @@ from flask.ext.login import current_user
 from poisk import app, lm, babel
 from poisk.models import db, User, AnonUser, Key, KeyTransaction, change_key_holder
 from poisk.helpers import redirect_back, keyholder_required
+from poisk.notify import notify_key_given
 
 openid_url = 'https://id.kreativitaet-trifft-technik.de/openidserver/users/'
 
@@ -67,6 +68,8 @@ def change_keyholder(key_id):
     key = Key.query.get(key_id)
     change_key_holder(key, user)
     db.session.commit()
+
+    notify_key_given(user, key, g.user)
     flash("changed keyholder for %s to %s" % (key.name, user), 'success')
     return redirect_back('admin_keys')
 
