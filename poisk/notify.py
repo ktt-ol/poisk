@@ -32,7 +32,7 @@ def notify_key_given(user, key, giver):
         recipients=[user.email],
     )
     msg.body = textwrap.dedent("""
-                           Congratulations, you are not the keyholder of %s.
+                           Congratulations, you are now the keyholder of %s.
                            Please blame %s.
                            """ % (key.name, giver)
                            )
