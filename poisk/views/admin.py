@@ -17,12 +17,12 @@ def restrict_to_admins():
     if not g.user.is_admin:
         return abort(403)
 
-@admin.route('/admin/users', methods=['GET', 'POST'])
+@admin.route('/users', methods=['GET', 'POST'])
 def users():
     users = User.query.all()
     return render_template('admin/users.html', users=users)
 
-@admin.route('/admin/keys', methods=['GET', 'POST'])
+@admin.route('/keys', methods=['GET', 'POST'])
 def keys():
     keys = Key.query.all()
     keyholders = User.query.filter(User.is_keyholder==True).all()
