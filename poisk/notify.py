@@ -37,7 +37,6 @@ def notify_key_given(user, key, giver):
                            """ % (key.name, giver)
                            )
 
-    print msg.body
     try:
         mail.send(msg)
     except Exception:
