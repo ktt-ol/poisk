@@ -28,3 +28,5 @@ def deploy():
     with cd("poisk"):
         run("git checkout master")
         run("git reset --hard")
+
+        #run('sqlite3 app.db < upgrade.sql')

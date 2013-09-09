@@ -32,7 +32,7 @@
         </thead>
         <tbody>
         {% for key in keys %}
-        <tr>
+        <tr class='{{ last_activity_color_class(key) }}'>
             <td><a href="{{ url_for('key', key_id=key.id) }}">{{ key.name }}</a></td>
             <td>{{ user_link(key.holder) }}</td>
             <td>
@@ -70,4 +70,13 @@
         {% endfor %}
         </tbody>
     </table>
+{%- endmacro %}
+
+
+{%- macro last_activity_color_class(key) -%}
+{%- if key.last_activity.seconds <= 60*10 -%}act-green
+{%- elif key.last_activity.days < 3 -%}act-orange
+{%- elif key.last_activity.days < 7 -%}act-yellow
+{%- else -%}act-red
+{%- endif -%}
 {%- endmacro %}

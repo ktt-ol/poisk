@@ -32,7 +32,7 @@ def before_request():
 
 @app.route('/')
 def index():
-    keys = Key.query.outerjoin(Key.current_transaction).order_by(db.desc(KeyTransaction.start)).all()
+    keys = Key.query_ordered().all()
     keyholders = []
     if g.user.is_keyholder:
         keyholders = User.query.filter(User.is_keyholder==True).all()
@@ -41,7 +41,7 @@ def index():
 @app.route('/keys')
 @keyholder_required
 def keys():
-    keys = Key.query.all()
+    keys = Key.query_ordered().all()
     keyholders = User.query.filter(User.is_keyholder==True).all()
     return render_template("keys.html", keys=keys, keyholders=keyholders)
 

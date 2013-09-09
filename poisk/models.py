@@ -3,6 +3,8 @@ from datetime import datetime
 from flask.ext.login import AnonymousUserMixin
 from poisk import db
 
+from sqlalchemy.sql import functions
+
 class KeyTransaction(db.Model):
     __tablename__ = 'key_transactions'
 
@@ -91,6 +93,22 @@ class Key(db.Model):
 
     def __repr__(self):
         return '<Key %r>' % self.name
+
+    @property
+    def last_activity(self):
+        date = max(self.holder.last_seen or datetime.fromtimestamp(0),
+                   self.current_transaction.start or datetime.fromtimestamp(0))
+        return datetime.utcnow() - date
+
+    @classmethod
+    def query_ordered(cls):
+        # order by most recent last_seen OR key transaction
+        newest_date = functions.max(
+            functions.coalesce(User.last_seen, 0),
+            functions.coalesce(KeyTransaction.start, 0)
+        )
+        query = Key.query.outerjoin(Key.holder).outerjoin(Key.current_transaction)
+        return query.order_by(db.desc(newest_date))
 
 class ActionToken(db.Model):
     __tablename__ = 'action_tokens'
