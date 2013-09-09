@@ -3,6 +3,7 @@
 from flask.ext.script import Manager, Server, Shell
 
 from poisk import app, models
+from poisk.status import SpaceStatus
 from poisk.models import db, User, Key
 
 def _make_context():
@@ -15,7 +16,6 @@ def _make_context():
     )
 
 manager = Manager(app)
-manager.add_command("runserver", Server(threaded=True, use_reloader=True))
 manager.add_command("shell", Shell(make_context=_make_context))
 
 @manager.command
@@ -34,6 +34,13 @@ def init_db():
     u.name = "Surfstation"
     db.session.add(u)
     db.session.commit()
+
+@manager.command
+def runserver():
+    status = SpaceStatus()
+    status.start()
+
+    app.run(threaded=True, use_reloader=True)
 
 
 if __name__ == "__main__":

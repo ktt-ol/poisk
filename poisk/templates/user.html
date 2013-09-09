@@ -5,6 +5,9 @@
   <p>Nick: {{ user.nick or "" }}</p>
   <p>Name: {{ user.name or "" }}</p>
   <p>Email: {{ user.email or "" }}</p>
+  {% if user.last_seen %}
+  <p>Last seen: {{ user.last_seen | datetimeformat }}</p>
+  {% endif %}
   <p>Keys:</p>
   <ul>
   {% for key in user.keys %}

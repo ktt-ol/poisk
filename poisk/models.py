@@ -1,10 +1,7 @@
 from flask import g
 from datetime import datetime
-from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import AnonymousUserMixin
-
-db = SQLAlchemy()
-
+from poisk import db
 
 class KeyTransaction(db.Model):
     __tablename__ = 'key_transactions'
@@ -36,6 +33,7 @@ class User(db.Model):
     nick = db.Column(db.String, unique=True)
     name = db.Column(db.String)
     email = db.Column(db.String)
+    last_seen = db.Column(db.DateTime)
     is_keyholder = db.Column(db.Boolean, default=False)
     is_admin = db.Column(db.Boolean, default=False)
     is_public = db.Column(db.Boolean)
