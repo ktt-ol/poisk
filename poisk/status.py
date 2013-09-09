@@ -11,7 +11,6 @@ from poisk import app, db
 from poisk.models import User
 
 import logging
-logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger('spaceticker')
 
 def parsed_events(events):
