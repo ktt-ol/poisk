@@ -36,11 +36,11 @@ def init_db():
     db.session.commit()
 
 @manager.command
-def runserver():
+def runserver(port=5000):
     status = SpaceStatus()
     status.start()
 
-    app.run(threaded=True, use_reloader=True)
+    app.run(port=int(port), threaded=True, use_reloader=True)
 
 
 if __name__ == "__main__":
