@@ -87,6 +87,7 @@ class Key(db.Model):
     holder = db.relationship('User', backref='keys', lazy='joined')
     current_transaction_id = db.Column(db.Integer, db.ForeignKey('key_transactions.id', use_alter=True, name='fk_key_key_transactions_id'))
     current_transaction = db.relationship('KeyTransaction', foreign_keys=[current_transaction_id], post_update=True)
+    allocated = db.Column('allocated', db.Boolean, default=False)
 
     def __init__(self, name):
         self.name = name

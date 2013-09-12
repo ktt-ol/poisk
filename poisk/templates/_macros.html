@@ -28,6 +28,9 @@
             <th>Key</th>
             <th>Keyholder</th>
             <th>Change</th>
+            {% if admin_list %}
+            <th>Allocated</th>
+            {% endif %}
         </tr>
         </thead>
         <tbody>
@@ -39,12 +42,15 @@
         {% if admin_list %}
             {{ give_key_form(key, keyholders) }}
         {% else %}
-            {% if g.user != key.holder and not g.user.is_keymanager %}
+            {% if g.user != key.holder and not g.user.is_keymanager and not key.allocated %}
             {{ take_key_form(key) }}
             {% endif %}
             {% if g.user == key.holder or g.user.is_keymanager %}
                 {{ give_key_form(key, keyholders) }}
             {% endif %}
+        {% endif %}
+        {% if admin_list %}
+            <td>{{ key.allocated }}</td>
         {% endif %}
             </td>
         </tr>
