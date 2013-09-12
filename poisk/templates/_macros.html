@@ -74,9 +74,10 @@
 
 
 {%- macro last_activity_color_class(key) -%}
-{%- if key.last_activity.seconds <= 60*10 -%}act-green
-{%- elif key.last_activity.days < 3 -%}act-orange
-{%- elif key.last_activity.days < 7 -%}act-yellow
-{%- else -%}act-red
+{%- if key.last_activity.seconds <= 60*10 -%}act-present
+{%- elif key.last_activity.days < 3 -%}act-fresh
+{%- elif key.last_activity.days < 7 -%}act-idle
+{%- elif key.last_activity.days > 30 -%}act-dead
+{%- else -%}act-stale
 {%- endif -%}
 {%- endmacro %}

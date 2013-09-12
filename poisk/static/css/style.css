@@ -1,4 +1,5 @@
-.act-green { background-color: #D3F5CA; }
-.act-orange { background-color: #FFFCD3; }
-.act-yellow { background-color: #FFEBD3; }
-.act-red { background-color: #FFE0C1; }
+.act-present { background-color: #D3F5CA; font-style: italic; }
+.act-fresh { background-color: #D3F5CA; }
+.act-idle { background-color: #FFFCD3; }
+.act-stale { background-color: #FFE0C1; }
+.act-dead { }
