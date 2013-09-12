@@ -63,7 +63,7 @@
         </thead>
         <tbody>
         {% for key in keys %}
-        <tr>
+        <tr class='{{ last_activity_color_class(key) }}'>
             <td>{{ key.name }}</td>
             <td>{{ key.holder.public_name }}</td>
         </tr>
