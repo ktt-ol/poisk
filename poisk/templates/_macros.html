@@ -22,7 +22,7 @@
 {%- endmacro %}
 
 {% macro keys_list(keys, keyholders, admin_list=False) %}
-    <table class="table table-hover">
+    <table class="table table-hover key-list">
         <thead>
         <tr>
             <th>Key</th>
@@ -60,7 +60,7 @@
 {%- endmacro %}
 
 {% macro keys_list_ro(keys) %}
-    <table class="table table-hover">
+    <table class="table table-hover key-list">
         <thead>
         <tr>
             <th>Key</th>
@@ -80,10 +80,10 @@
 
 
 {%- macro last_activity_color_class(key) -%}
-{%- if key.last_activity.seconds <= 60*10 -%}act-present
-{%- elif key.last_activity.days < 3 -%}act-fresh
-{%- elif key.last_activity.days < 7 -%}act-idle
-{%- elif key.last_activity.days > 30 -%}act-dead
-{%- else -%}act-stale
+{%- if key.last_activity.seconds <= 60*10 -%}success cursive
+{%- elif key.last_activity.days < 3 -%}success
+{%- elif key.last_activity.days < 7 -%}info
+{%- elif key.last_activity.days < 30 -%}warning
+{%- else -%}
 {%- endif -%}
-{%- endmacro %}
+{%- endmacro -%}
