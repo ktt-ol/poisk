@@ -101,6 +101,16 @@ class Key(db.Model):
                    self.current_transaction.start or datetime.fromtimestamp(0))
         return datetime.utcnow() - date
 
+    @property
+    def last_activity_str(self):
+        if self.allocated:
+            return ''
+        dt = self.last_activity
+        hours = dt.seconds / 60 / 60 % 24
+        if not dt.days and not hours:
+            return ''
+        return "%dd%dh" % (dt.days, hours)
+
     @classmethod
     def query_ordered(cls):
         # order by most recent last_seen OR key transaction

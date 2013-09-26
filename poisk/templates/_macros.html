@@ -28,6 +28,7 @@
             <th>Key</th>
             <th>Keyholder</th>
             <th>Change</th>
+            <th>Last activity</th>
             {% if admin_list %}
             <th>Allocated</th>
             {% endif %}
@@ -49,6 +50,7 @@
                 {{ give_key_form(key, keyholders) }}
             {% endif %}
         {% endif %}
+        <td>{{ key.last_activity_str }}</td>
         {% if admin_list %}
             <td>{{ key.allocated }}</td>
         {% endif %}
