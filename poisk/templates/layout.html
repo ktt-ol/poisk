@@ -22,20 +22,10 @@
               {% if g.user.is_authenticated() %}
               <li><a href="{{ url_for("keys") }}">Keys</a></li>
               {% endif %}
-              {% if g.user.is_authenticated() and g.user.is_admin %}
-              <li class="dropdown">
-                  <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin<b class="caret"></b></a>
-                  <ul class="dropdown-menu" role="menu">
-                      <li><a href="{{ url_for("admin.users") }}">Users</a></li>
-                      <li><a href="{{ url_for("admin.keys") }}">Keys</a></li>
-                      <li><a href="{{ url_for("admin.key_add") }}">Key add</a></li>
-                  </ul>
-              </li>
-              {% endif %}
             </ul>
             <ul class="nav pull-right">
               {% if g.user.is_authenticated() %}
-              <li><a href="{{ url_for("user.show", user_id=g.user.id) }}" class="navbar-link">Logged in as {{ g.user.nick or g.user.name }}</a></li>
+              <li><a href="{{ url_for("user.show", user_id=g.user.id) }}" class="navbar-link">{{ g.user.nick or g.user.name }}</a></li>
               <li><a href="{{ url_for('user.logout') }}" class="navbar-link">Logout</a></li>
               {% else %}
               <li><a href="/login" class="navbar-link">Log in</a></li>
@@ -68,7 +58,15 @@
 
       <footer>
       <hr />
-      <p><a href="{{ url_for('about') }}">Poisk?</a></p>
+      {% if g.user.is_authenticated() and g.user.is_admin %}
+        <p>
+          Admin: <a href="{{ url_for("admin.users") }}">Users</a> |
+          <a href="{{ url_for("admin.keys") }}">Keys</a> | 
+          <a href="{{ url_for("admin.key_add") }}">Key add</a>
+        </p>
+      {% else %}
+        <p><a href="{{ url_for('about') }}">Poisk?</a></p>
+      {% endif %}
       </footer>
 
     </div><!--/container-->
