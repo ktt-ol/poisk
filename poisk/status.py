@@ -47,6 +47,8 @@ class SpaceStatus(threading.Thread):
     def handle_spaceDevices(self, evt):
         with app.test_request_context():
             for p in evt.get('people', []):
+                if 'id' not in p:
+                    continue
                 user = User.query.filter_by(nick=p['id']).first()
                 if user:
                     user.last_seen = datetime.datetime.utcnow()
