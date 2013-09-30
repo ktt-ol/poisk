@@ -84,8 +84,8 @@
 {%- macro last_activity_color_class(key) -%}
 {%- if key.last_activity.seconds <= 60*10 -%}success cursive
 {%- elif key.last_activity.days < 3 -%}success
-{%- elif key.last_activity.days < 7 -%}info
-{%- elif key.last_activity.days < 30 -%}warning
+{%- elif key.last_activity.days < 7 -%}warning
+{%- elif key.last_activity.days < 30 -%}error
 {%- else -%}
 {%- endif -%}
 {%- endmacro -%}
