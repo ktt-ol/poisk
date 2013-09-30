@@ -25,7 +25,7 @@ def users():
 @admin.route('/keys', methods=['GET', 'POST'])
 def keys():
     keys = Key.query_ordered().all()
-    keyholders = User.query.filter(User.is_keyholder==True).all()
+    keyholders = User.query_keyholders().all()
     return render_template('admin/keys.html', keys=keys, keyholders=keyholders)
 
 @admin.route('/key/add', methods=['GET', 'POST'])

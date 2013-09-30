@@ -35,14 +35,14 @@ def index():
     keys = Key.query_ordered().all()
     keyholders = []
     if g.user.is_keyholder:
-        keyholders = User.query.filter(User.is_keyholder==True).all()
+        keyholders = User.query_keyholders().all()
     return render_template("index.html", keys=keys, keyholders=keyholders)
 
 @app.route('/keys')
 @keyholder_required
 def keys():
     keys = Key.query_ordered().all()
-    keyholders = User.query.filter(User.is_keyholder==True).all()
+    keyholders = User.query_keyholders().all()
     return render_template("keys.html", keys=keys, keyholders=keyholders)
 
 @app.route('/key/<int:key_id>')

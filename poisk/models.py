@@ -27,6 +27,7 @@ def change_key_holder(key, holder):
     tx.holder = holder
     key.current_transaction = tx
     key.holder = holder
+    holder.refresh_last_seen()
     db.session.add(tx)
 
 class User(db.Model):
@@ -73,6 +74,13 @@ class User(db.Model):
         if not self.nick: # special users are "public"
             return self.name
         return self.nick
+
+    def refresh_last_seen(self):
+        self.last_seen = datetime.utcnow()
+
+    @classmethod
+    def query_keyholders(cls):
+        return User.query.filter(User.is_keyholder==True).order_by(db.desc(User.last_seen)).order_by(User.nick)
 
 class AnonUser(AnonymousUserMixin):
     is_admin = False

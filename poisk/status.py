@@ -3,7 +3,6 @@ import json
 import socket
 import threading
 import time
-import datetime
 
 STATUS_URL = "http://status.kreativitaet-trifft-technik.de/api/statusStream?spaceOpen=1&spaceDevices=1"
 
@@ -51,7 +50,7 @@ class SpaceStatus(threading.Thread):
                     continue
                 user = User.query.filter_by(nick=p['id']).first()
                 if user:
-                    user.last_seen = datetime.datetime.utcnow()
+                    user.refresh_last_seen()
             db.session.commit()
 
     def events(self):
