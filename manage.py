@@ -1,9 +1,12 @@
 # manage.py
 
+import datetime
+
 from flask.ext.script import Manager, Server, Shell
 
 from poisk import app, models
 from poisk.status import SpaceStatus
+from poisk.notify import notify_stale_keyholder
 from poisk.models import db, User, Key
 
 def _make_context():
@@ -34,6 +37,17 @@ def init_db():
     u.name = "Surfstation"
     db.session.add(u)
     db.session.commit()
+
+
+@manager.command
+def poke(doit=False):
+    keyholders = User.query_keyholders().all()
+    for k in keyholders:
+        for key in k.keys:
+            if key.allocated:
+                continue
+            if key.last_activity.days in (3, 5, 7) or key.last_activity.days >= 10:
+                notify_stale_keyholder(k, key, doit=doit)
 
 @manager.command
 def runserver(port=5000):

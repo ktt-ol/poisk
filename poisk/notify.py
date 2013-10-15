@@ -42,3 +42,27 @@ def notify_key_given(user, key, giver):
     except Exception:
         current_app.logger.exception("error sending mail")
 
+def notify_stale_keyholder(user, key, doit=False):
+    if not user.email:
+        return
+
+    msg = Message(
+        "Poisk: please return %s" % (key.name),
+        sender=current_app.config['ADMIN_EMAILS'][0],
+        recipients=[user.email],
+    )
+    msg.body = textwrap.dedent("""
+                           You were last seen %s ago.
+                           Please return the key!
+                           """ % (key.last_activity_str)
+                           )
+
+    try:
+        if doit:
+            mail.send(msg)
+        else:
+            print '>' * 30
+            print msg
+    except Exception:
+        current_app.logger.exception("error sending mail")
+
