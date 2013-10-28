@@ -1,8 +1,6 @@
 # manage.py
 
-import datetime
-
-from flask.ext.script import Manager, Server, Shell
+from flask.ext.script import Manager, Shell
 
 from poisk import app, models
 from poisk.status import SpaceStatus
