@@ -1,2 +1,29 @@
 .cursive { font-style: italic; }
 .key-list a { color: inherit; }
+
+body {
+  font-size: 16px;
+}
+
+#headMenu .brand {
+  margin-left: 25px;
+}
+
+#inprintLink, #loginLink {
+  margin-right: 30px;
+}
+
+.container {
+  width: 95%;
+}
+
+section {
+  margin-bottom: 45px;
+}
+
+footer {
+  margin-top: 20px;
+  width: 100%;
+  text-align: center;
+  background-color: #fff;
+}

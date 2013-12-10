@@ -3,7 +3,7 @@
 {% import "_macros.html" as macros %} 
 {% block body %}
 <div class="row-fluid">
-    <div class="span4">
+    <div class="offset1 span4">
         <h2>Keys</h2>
         {% if g.user.is_keyholder %}
             {{ macros.keys_list(keys, keyholders) }}
