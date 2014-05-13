@@ -105,6 +105,8 @@ class Key(db.Model):
 
     @property
     def last_activity(self):
+        if not self.holder:
+            return None
         date = max(self.holder.last_seen or datetime.fromtimestamp(0),
                    self.current_transaction.start or datetime.fromtimestamp(0))
         return datetime.utcnow() - date
